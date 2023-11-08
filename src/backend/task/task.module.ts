@@ -31,5 +31,6 @@ export const taskGrpcClientOptions: GrpcOptions = addReflectionToGrpcConfig({
   ],
   controllers: [TaskGrpcController],
   providers: [TaskService],
+  exports: [TaskService],
 })
 export class TaskModule {}
