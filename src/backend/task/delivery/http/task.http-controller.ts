@@ -1,19 +1,22 @@
 import {
+    Body,
   Controller,
   HttpStatus,
   Param,
   Post,
   UploadedFiles,
 } from '@nestjs/common';
-import { TaskService } from '../../service/task.service';
-import { TaskFacadeService } from '../../service/task.facade-service';
 import { runInTransaction } from 'typeorm-transactional';
+
+import { TaskService } from '../../service/task.service';
 import { TaskFileService } from '../../service/task-file.service';
+import { TaskActionService } from '../../service/task-action.service';
 
 @Controller('/tasks')
 export class TaskHttpController {
   constructor(
     private taskService: TaskService,
+    private taskActionService: TaskActionService,
     private taskFileService: TaskFileService,
   ) {}
 
@@ -46,5 +49,18 @@ export class TaskHttpController {
     });
 
     return HttpStatus.OK;
+  }
+
+  @Post('/:id/predict')
+  async predict(@Param('id') id: string, @Body() body: any) {
+    const task = await this.taskService.findOneById(id);
+    // TODO: will check not found
+    const taskAction = await this.taskActionService.predict(
+      task.id,
+      body['coordinates'],
+    );
+    return {
+      actionId: taskAction.id,
+    };
   }
 }
