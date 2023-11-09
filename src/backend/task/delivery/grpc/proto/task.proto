@@ -6,6 +6,13 @@ service TaskService {
   rpc Create (CreateRequest) returns (CreateResponse);
   rpc UpdateStatus (UpdateStatusRequest) returns (UpdateStatusResponse);
   rpc GetOneById (GetOneByIdRequest) returns (GetOneByIdResponse);
+  rpc Predict (PredictRequest) returns (PredictResponse);
+  rpc GetActionById (GetActionByIdRequest) returns (GetActionByIdResponse);
+}
+
+message Coordinate {
+  double lat = 1;
+  double lng = 2;
 }
 
 message CreateRequest {
@@ -18,7 +25,7 @@ message CreateResponse {
 }
 
 message UpdateStatusRequest {
-  string id = 1;
+  string taskId = 1;
   string status = 2;
 }
 message UpdateStatusResponse {}
@@ -30,4 +37,24 @@ message GetOneByIdResponse {
   string id = 1;
   string name = 2;
   string status = 3;
+}
+
+
+message PredictRequest {
+  string taskId = 1;
+  repeated Coordinate coordinates = 2;
+}
+message PredictResponse {
+  string actionId = 1;
+}
+
+message GetActionByIdRequest {
+  string id = 1;
+}
+message GetActionByIdResponse {
+  string id = 1;
+  string type = 2;
+  string status = 3;
+  string taskId = 4;
+  repeated Coordinate coordinates = 5;
 }

@@ -14,9 +14,6 @@ export class TaskAction {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'name', nullable: false })
-  name: string;
-
   @Column({ name: 'action', nullable: false })
   type: ActionType;
 
