@@ -28,7 +28,7 @@ export class TaskGrpcController {
   public async getOneById(
     data: any,
   ): Promise<{ id: string; name: string; status: string }> {
-    const task = await this.taskService.getOneById(data['id']);
+    const task = await this.taskService.findOneById(data['id']);
     // TODO: will check not found
     return {
       id: task?.id,

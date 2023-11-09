@@ -6,11 +6,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { ActionStatus, ActionType } from '../task.enum';
 import { Task } from './task.entity';
+import { ActionStatus, ActionType } from '../task.enum';
 
-@Entity({ name: 'actions' })
-export class Actions {
+@Entity({ name: 'task_actions' })
+export class TaskAction {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -30,6 +30,6 @@ export class Actions {
   @JoinColumn({ name: 'task_id' })
   task: Task;
 
-  @Column({ name: 'metadata', nullable: true, type: 'mediumblob' })
-  metadata: Buffer;
+  @Column({ name: 'metadata', nullable: true, type: 'json' })
+  metadata: any;
 }

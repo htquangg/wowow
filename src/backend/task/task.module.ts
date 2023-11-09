@@ -7,11 +7,20 @@ import {
 } from 'nestjs-grpc-reflection';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { AwsModule } from '../services/aws/aws.module';
+
 import { getMetadataArgsStorage } from '../global';
-import { TaskService } from './service/task.service';
 import { TaskGrpcController } from './delivery/grpc/task.grpc-controller';
+import { TaskHttpController } from './delivery/http/task.http-controller';
+
+import { TaskService } from './service/task.service';
+import { TaskActionService } from './service/task-action.service';
+import { TaskFileService } from './service/task-file.service';
+import { TaskFacadeService } from './service/task.facade-service';
+
 import { Task } from './repository/task.entity';
-import { Actions } from './repository/action.entity';
+import { TaskAction } from './repository/task-action.entity';
+import { TaskFile } from './repository/task-file.entity';
 
 getMetadataArgsStorage().packages.push('task');
 getMetadataArgsStorage().protoPaths.push(
@@ -28,11 +37,17 @@ export const taskGrpcClientOptions: GrpcOptions = addReflectionToGrpcConfig({
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Task, Actions]),
+    TypeOrmModule.forFeature([Task, TaskAction, TaskFile]),
     GrpcReflectionModule.register(taskGrpcClientOptions),
+    AwsModule,
   ],
-  controllers: [TaskGrpcController],
-  providers: [TaskService],
+  controllers: [TaskGrpcController, TaskHttpController],
+  providers: [
+    TaskService,
+    TaskActionService,
+    TaskFileService,
+    TaskFacadeService,
+  ],
   exports: [TaskService],
 })
 export class TaskModule {}
