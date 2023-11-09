@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions } from '@nestjs/microservices';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 
@@ -10,8 +11,11 @@ async function bootstrap() {
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
-    grpcClientOptions,
+    grpcClientOptions(),
   );
+
   await app.listen();
+
+  console.log(`gRPC server is listening on ${grpcClientOptions().options.url}`);
 }
 bootstrap();

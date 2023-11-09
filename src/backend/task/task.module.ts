@@ -5,11 +5,13 @@ import {
   GrpcReflectionModule,
   addReflectionToGrpcConfig,
 } from 'nestjs-grpc-reflection';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { getMetadataArgsStorage } from '../global';
 import { TaskService } from './service/task.service';
 import { TaskGrpcController } from './delivery/grpc/task.grpc-controller';
-import { getMetadataArgsStorage } from '../global';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from './repository/task.entity';
+import { Actions } from './repository/action.entity';
 
 getMetadataArgsStorage().packages.push('task');
 getMetadataArgsStorage().protoPaths.push(
@@ -26,7 +28,7 @@ export const taskGrpcClientOptions: GrpcOptions = addReflectionToGrpcConfig({
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Task]),
+    TypeOrmModule.forFeature([Task, Actions]),
     GrpcReflectionModule.register(taskGrpcClientOptions),
   ],
   controllers: [TaskGrpcController],
