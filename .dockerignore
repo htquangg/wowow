@@ -1,0 +1,14 @@
+.git
+.github
+.vscode
+/node_module
+.eslintrc.*
+.editorconfig
+.prettierrc
+/test
+Dockerfile
+/dist
+package-lock.json
+yarn.lock
+.env
+/src/web

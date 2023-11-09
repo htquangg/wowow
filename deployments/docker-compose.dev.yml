@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: "mysql:8.2.0"
+    container_name: wow-mysql
+    environment:
+      TZ: UTC
+      MYSQL_ROOT_PASSWORD: "${DATABASE_PASSWORD}"
+      MYSQL_DATABASE: "${DATABASE_NAME}"
+      MYSQL_PASSWORD: "${DATABASE_PASSWORD}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+    ports:
+      - "${DATABASE_PORT}:3306"
+    volumes:
+      - "wowsql:/var/lib/mysql"
+      - "./mysql/init:/docker-entrypoint-initdb.d"
+    restart: always
+  
+  wow-rpc-server:
+    container_name: wow-rpc-server
+    build:
+      context: ..
+    ports:
+      - ${GRPC_PORT}:50000
+    depends_on:
+      - mysql
+    command: node dist/index.grpc.js
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+      
+
+volumes:
+  wowsql:
+    driver: local
+
